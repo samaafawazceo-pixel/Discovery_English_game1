@@ -1,0 +1,2610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Shelly's A or An 🐢</title>
+  <style>
+    :root {
+      /* Default Boy Light Theme */
+      --bg-grad-start: #e0f2fe;
+      --bg-grad-end: #bae6fd;
+      --card-bg: #ffffff;
+      --card-border: #bae6fd;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-soft: #e0f2fe;
+      --accent-border: #38bdf8;
+      --accent-contrast: #ffffff;
+      --surface-subtle: #f1f5f9;
+      --shadow-color: rgba(2, 132, 199, 0.14);
+
+      --green-main: #22c55e;
+      --green-dark: #16a34a;
+      --green-bg: #dcfce7;
+      --green-text: #14532d;
+
+      --red-main: #ef4444;
+      --red-dark: #dc2626;
+      --red-bg: #fee2e2;
+      --red-text: #7f1d1d;
+
+      --yellow-card: #fef9c3;
+      --yellow-border: #facc15;
+      --yellow-text: #713f12;
+
+      --orange-card: #ffedd5;
+      --orange-border: #fb923c;
+      --orange-text: #7c2d12;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    /* Girl Light Theme */
+    [data-gender="girl"][data-theme="light"] {
+      --bg-grad-start: #fce7f3;
+      --bg-grad-end: #fbcfe8;
+      --card-bg: #ffffff;
+      --card-border: #f9a8d4;
+      --text-main: #1f122b;
+      --text-muted: #6b4c7a;
+      --accent: #db2777;
+      --accent-hover: #be185d;
+      --accent-soft: #fce7f3;
+      --accent-border: #f472b6;
+      --accent-contrast: #ffffff;
+      --surface-subtle: #fdf2f8;
+      --shadow-color: rgba(219, 39, 119, 0.14);
+    }
+
+    /* Boy Dark Theme */
+    [data-gender="boy"][data-theme="dark"] {
+      --bg-grad-start: #0b192c;
+      --bg-grad-end: #102a43;
+      --card-bg: #162e47;
+      --card-border: #264b73;
+      --text-main: #f0f9ff;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #7dd3fc;
+      --accent-soft: #1e3a5f;
+      --accent-border: #0284c7;
+      --accent-contrast: #082f49;
+      --surface-subtle: #0f2236;
+      --shadow-color: rgba(0, 0, 0, 0.4);
+
+      --green-bg: #052e16;
+      --green-text: #bbf7d0;
+      --red-bg: #450a0a;
+      --red-text: #fecaca;
+
+      --yellow-card: #422006;
+      --yellow-border: #eab308;
+      --yellow-text: #fef08a;
+
+      --orange-card: #431407;
+      --orange-border: #f97316;
+      --orange-text: #fed7aa;
+    }
+
+    /* Girl Dark Theme */
+    [data-gender="girl"][data-theme="dark"] {
+      --bg-grad-start: #240b1f;
+      --bg-grad-end: #3b1031;
+      --card-bg: #47163b;
+      --card-border: #702459;
+      --text-main: #fdf2f8;
+      --text-muted: #f9a8d4;
+      --accent: #f472b6;
+      --accent-hover: #f9a8d4;
+      --accent-soft: #5b1b4b;
+      --accent-border: #db2777;
+      --accent-contrast: #3b0724;
+      --surface-subtle: #300e28;
+      --shadow-color: rgba(0, 0, 0, 0.45);
+
+      --green-bg: #052e16;
+      --green-text: #bbf7d0;
+      --red-bg: #450a0a;
+      --red-text: #fecaca;
+
+      --yellow-card: #422006;
+      --yellow-border: #eab308;
+      --yellow-text: #fef08a;
+
+      --orange-card: #431407;
+      --orange-border: #f97316;
+      --orange-text: #fed7aa;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    input {
+      user-select: text;
+      -webkit-user-select: text;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: "Nunito", "Comic Sans MS", "Chalkboard SE", "Segoe UI Rounded", system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      touch-action: manipulation;
+      overflow-x: hidden;
+      transition: background 0.35s ease, color 0.25s ease;
+    }
+
+    .app-container {
+      max-width: 580px;
+      margin: 0 auto;
+      padding: calc(12px + var(--safe-top)) 16px calc(140px + var(--safe-bottom));
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Guide Arrow Animations */
+    @keyframes bounceArrowDown {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-9px); }
+    }
+
+    @keyframes bounceArrowLeft {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(9px); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7), 0 6px 0 var(--card-border); }
+      50% { box-shadow: 0 0 0 10px rgba(250, 204, 21, 0), 0 6px 0 var(--card-border); }
+    }
+
+    .guide-arrow-banner {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #fef08a;
+      color: #854d0e;
+      border: 3px solid #eab308;
+      border-radius: 999px;
+      padding: 4px 14px;
+      font-size: 0.95rem;
+      font-weight: 900;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+      animation: bounceArrowDown 1s ease-in-out infinite;
+      margin: 0 auto 8px auto;
+    }
+
+    .guide-arrow-inline {
+      display: inline-block;
+      font-size: 1.5rem;
+      line-height: 1;
+      animation: bounceArrowLeft 0.9s ease-in-out infinite;
+    }
+
+    .guide-finger-top {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.55rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+      animation: bounceArrowDown 0.9s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    /* Reusable 3D tactile button */
+    .btn-3d {
+      appearance: none;
+      border: 3px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      border-radius: 22px;
+      padding: 14px 20px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 0 var(--card-border), 0 8px 16px var(--shadow-color);
+      transition: transform 0.1s ease, box-shadow 0.1s ease, background 0.2s ease, border-color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: inherit;
+      position: relative;
+    }
+
+    .btn-3d:active:not(:disabled) {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 var(--card-border), 0 3px 8px var(--shadow-color);
+    }
+
+    .btn-3d.accent {
+      background: var(--accent);
+      color: var(--accent-contrast);
+      border-color: var(--accent-hover);
+      box-shadow: 0 6px 0 var(--accent-hover), 0 8px 16px var(--shadow-color);
+    }
+
+    .btn-3d.accent:active:not(:disabled) {
+      box-shadow: 0 2px 0 var(--accent-hover);
+    }
+
+    .btn-3d.green {
+      background: var(--green-main);
+      color: #ffffff;
+      border-color: var(--green-dark);
+      box-shadow: 0 6px 0 var(--green-dark);
+    }
+
+    .btn-3d.red {
+      background: var(--red-main);
+      color: #ffffff;
+      border-color: var(--red-dark);
+      box-shadow: 0 6px 0 var(--red-dark);
+    }
+
+    /* Mascot Banner */
+    .shelly-banner {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 26px;
+      padding: 12px 16px;
+      box-shadow: 0 6px 16px var(--shadow-color);
+      margin-bottom: 16px;
+      cursor: pointer;
+    }
+
+    .shelly-avatar {
+      font-size: 3.1rem;
+      line-height: 1;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      border: 3px solid var(--accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      animation: floatBob 3s ease-in-out infinite;
+    }
+
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(-4deg); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      70% { transform: scale(1.04); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .shelly-speech {
+      flex: 1;
+    }
+
+    .shelly-speech h2 {
+      margin: 0 0 3px 0;
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .shelly-speech p {
+      margin: 0;
+      font-size: 0.96rem;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* Top Header on Home Screen */
+    .home-header {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 24px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 6px 14px var(--shadow-color);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .header-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface-subtle);
+      border: 2px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .icon-btn {
+      border: 2px solid var(--card-border);
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.92rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+
+    .xp-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .xp-track {
+      flex: 1;
+      height: 16px;
+      background: var(--surface-subtle);
+      border: 2px solid var(--card-border);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .xp-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #fbbf24, #f59e0b);
+      border-radius: 999px;
+      transition: width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .xp-label {
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      min-width: 78px;
+      text-align: right;
+    }
+
+    /* Home Grid of Buttons */
+    .section-tag {
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin: 6px 4px 8px 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 13px;
+    }
+
+    .game-card-btn {
+      width: 100%;
+      text-align: left;
+      padding: 15px 16px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      box-shadow: 0 6px 0 var(--card-border), 0 8px 16px var(--shadow-color);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      font-family: inherit;
+      color: var(--text-main);
+      position: relative;
+    }
+
+    .game-card-btn.recommended-next {
+      border-color: #eab308;
+      animation: pulseGlow 2s infinite;
+    }
+
+    .game-card-btn.arcade-special {
+      background: linear-gradient(135deg, var(--card-bg) 0%, var(--accent-soft) 100%);
+      border-color: var(--accent-border);
+    }
+
+    .game-card-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 var(--card-border);
+    }
+
+    .game-card-left {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+    }
+
+    .game-icon-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: var(--accent-soft);
+      border: 2px solid var(--accent-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .game-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      margin: 0 0 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .game-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .next-arrow-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #fef08a;
+      color: #854d0e;
+      border: 2px solid #eab308;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 900;
+      animation: bounceArrowLeft 0.9s ease-in-out infinite;
+    }
+
+    .stars-badge {
+      display: flex;
+      gap: 2px;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      background: var(--surface-subtle);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 2px solid var(--card-border);
+    }
+
+    .star-off {
+      opacity: 0.25;
+      filter: grayscale(1);
+    }
+
+    /* Start / Profile Screen */
+    .start-card {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 28px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 10px 25px var(--shadow-color);
+      animation: popIn 0.35s ease;
+    }
+
+    .start-shelly {
+      font-size: 4.5rem;
+      line-height: 1;
+      margin-bottom: 8px;
+      display: inline-block;
+      animation: floatBob 3s ease-in-out infinite;
+    }
+
+    .start-title {
+      font-size: 1.85rem;
+      font-weight: 900;
+      margin: 0 0 4px 0;
+    }
+
+    .name-prompt {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin: 14px 0 4px 0;
+    }
+
+    .arabic-hint {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 0 0 12px 0;
+      direction: rtl;
+    }
+
+    .name-input {
+      width: 100%;
+      max-width: 340px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 14px 18px;
+      border-radius: 20px;
+      border: 3px solid var(--accent-border);
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      outline: none;
+      font-family: inherit;
+      margin-bottom: 18px;
+    }
+
+    .name-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-soft);
+    }
+
+    .gender-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .gender-btn {
+      padding: 16px 12px;
+      border-radius: 22px;
+      border: 3px solid var(--card-border);
+      background: var(--surface-subtle);
+      color: var(--text-main);
+      font-size: 1.25rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
+      transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .gender-btn .emoji {
+      font-size: 2.8rem;
+      line-height: 1;
+    }
+
+    .gender-btn .voice-tag {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .gender-btn.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      transform: scale(1.03);
+      box-shadow: 0 6px 0 var(--accent-border);
+    }
+
+    /* Lesson Top Bar */
+    .lesson-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .close-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      border: 3px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      font-size: 1.4rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 0 var(--card-border);
+    }
+
+    .close-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--card-border);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 20px;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 999px;
+      overflow: hidden;
+      padding: 2px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, #4ade80);
+      border-radius: 999px;
+      transition: width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Visual Stage Step Map with Guide Arrow */
+    .stage-map-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 20px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      overflow-x: auto;
+    }
+
+    .stage-node {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-subtle);
+      border: 2px solid var(--card-border);
+      color: var(--text-muted);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .stage-node.done {
+      background: var(--green-main);
+      border-color: var(--green-dark);
+      color: #ffffff;
+    }
+
+    .stage-node.current {
+      background: #fef08a;
+      border: 3px solid #eab308;
+      color: #854d0e;
+      transform: scale(1.15);
+      box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.35);
+    }
+
+    .stage-node.current::after {
+      content: "👇";
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.05rem;
+      animation: bounceArrowDown 0.85s ease-in-out infinite;
+    }
+
+    /* Learn the Rule Cards */
+    .vowels-strip {
+      background: var(--card-bg);
+      border: 3px solid var(--accent-border);
+      border-radius: 24px;
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 14px var(--shadow-color);
+    }
+
+    .vowels-title {
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      margin: 0 0 10px 0;
+    }
+
+    .vowels-letters {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vowel-pill {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: var(--orange-card);
+      border: 3px solid var(--orange-border);
+      color: var(--orange-text);
+      font-size: 1.75rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--orange-border);
+      transition: transform 0.1s ease;
+    }
+
+    .vowel-pill:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--orange-border);
+    }
+
+    .rule-card {
+      border-radius: 26px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 4px solid transparent;
+      box-shadow: 0 8px 18px var(--shadow-color);
+    }
+
+    .rule-card.yellow {
+      background: var(--yellow-card);
+      border-color: var(--yellow-border);
+      color: var(--yellow-text);
+    }
+
+    .rule-card.orange {
+      background: var(--orange-card);
+      border-color: var(--orange-border);
+      color: var(--orange-text);
+    }
+
+    .rule-badge {
+      display: inline-block;
+      font-size: 2rem;
+      font-weight: 900;
+      padding: 4px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .rule-sentence {
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.35;
+      margin: 0 0 14px 0;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .example-chip {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 3px solid rgba(0, 0, 0, 0.12);
+      border-radius: 18px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: left;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+      transition: transform 0.1s ease;
+    }
+
+    .example-chip:active {
+      transform: translateY(3px);
+    }
+
+    .example-pic {
+      font-size: 2.2rem;
+      line-height: 1;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .example-text-en {
+      font-size: 1.1rem;
+      font-weight: 900;
+      display: block;
+    }
+
+    .example-text-ar {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      display: block;
+    }
+
+    /* Question Stage */
+    .question-stage {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 28px;
+      padding: 18px 16px;
+      text-align: center;
+      box-shadow: 0 8px 20px var(--shadow-color);
+      margin-bottom: 16px;
+      position: relative;
+      animation: popIn 0.25s ease;
+    }
+
+    .mode-instruction {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      margin: 0 0 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pic-display {
+      width: 124px;
+      height: 124px;
+      margin: 0 auto 10px auto;
+      border-radius: 28px;
+      background: var(--surface-subtle);
+      border: 3px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4.9rem;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s ease;
+    }
+
+    .pic-display:active {
+      transform: scale(0.95);
+    }
+
+    .speaker-mini {
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-contrast);
+      border: 3px solid var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 3px 8px var(--shadow-color);
+    }
+
+    .word-line {
+      font-size: 2.1rem;
+      font-weight: 900;
+      margin: 6px 0 4px 0;
+      letter-spacing: 0.5px;
+    }
+
+    .blank-slot {
+      display: inline-block;
+      min-width: 72px;
+      padding: 2px 12px;
+      margin-right: 6px;
+      border-bottom: 5px solid var(--accent);
+      color: var(--accent);
+      text-align: center;
+      border-radius: 10px;
+      background: var(--accent-soft);
+    }
+
+    .blank-slot.filled-correct {
+      background: var(--green-bg);
+      color: var(--green-main);
+      border-bottom-color: var(--green-main);
+    }
+
+    .blank-slot.filled-wrong {
+      background: var(--red-bg);
+      color: var(--red-main);
+      border-bottom-color: var(--red-main);
+    }
+
+    /* Big Choice Buttons (a / an / Yes / No) */
+    .choices-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .choice-btn {
+      min-height: 92px;
+      font-size: 2.3rem;
+      font-weight: 900;
+      border-radius: 26px;
+      border: 4px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--text-main);
+      box-shadow: 0 8px 0 var(--card-border), 0 10px 20px var(--shadow-color);
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: transform 0.1s ease, background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .choice-btn:active:not(:disabled) {
+      transform: translateY(5px);
+      box-shadow: 0 3px 0 var(--card-border);
+    }
+
+    .choice-btn.state-correct {
+      background: var(--green-main) !important;
+      border-color: var(--green-dark) !important;
+      color: #ffffff !important;
+      box-shadow: 0 6px 0 var(--green-dark) !important;
+    }
+
+    .choice-btn.state-wrong {
+      background: var(--red-main) !important;
+      border-color: var(--red-dark) !important;
+      color: #ffffff !important;
+      box-shadow: 0 6px 0 var(--red-dark) !important;
+    }
+
+    /* Circle a or an worksheet boxes */
+    .worksheet-circle-box {
+      min-height: 96px;
+      font-size: 2.4rem;
+      font-weight: 900;
+      border-radius: 22px;
+      border: 3px dashed var(--text-muted);
+      background: var(--card-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      font-family: inherit;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .red-circle-svg {
+      position: absolute;
+      inset: 6px;
+      width: calc(100% - 12px);
+      height: calc(100% - 12px);
+      pointer-events: none;
+    }
+
+    .red-circle-svg ellipse {
+      fill: none;
+      stroke: #ef4444;
+      stroke-width: 6;
+      stroke-linecap: round;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 0;
+      animation: drawCircle 0.35s ease-out forwards;
+    }
+
+    @keyframes drawCircle {
+      from { stroke-dashoffset: 400; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    /* Basket Sort */
+    .baskets-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .basket-btn {
+      min-height: 128px;
+      border-radius: 26px 26px 36px 36px;
+      padding: 14px 10px;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      position: relative;
+      transition: transform 0.12s ease;
+    }
+
+    .basket-btn:active:not(:disabled) {
+      transform: translateY(5px);
+    }
+
+    .basket-a {
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+      border: 4px solid #0369a1;
+      color: #ffffff;
+      box-shadow: 0 8px 0 #0369a1, 0 10px 20px var(--shadow-color);
+    }
+
+    .basket-an {
+      background: linear-gradient(180deg, #fb923c 0%, #ea580c 100%);
+      border: 4px solid #c2410c;
+      color: #ffffff;
+      box-shadow: 0 8px 0 #c2410c, 0 10px 20px var(--shadow-color);
+    }
+
+    .basket-rim {
+      width: 85%;
+      height: 12px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 999px;
+      margin-bottom: 4px;
+    }
+
+    .basket-label {
+      font-size: 2.5rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .basket-sub {
+      font-size: 0.95rem;
+      font-weight: 800;
+      opacity: 0.92;
+    }
+
+    /* Vowel Detective First Letter Highlight */
+    .first-letter-hi {
+      display: inline-block;
+      background: #fef08a;
+      color: #b45309;
+      border: 3px solid #f59e0b;
+      padding: 2px 12px;
+      border-radius: 14px;
+      margin-right: 3px;
+      transform: scale(1.08);
+    }
+
+    /* Listen & Choose Big Speaker */
+    .big-speaker-btn {
+      width: 148px;
+      height: 148px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--accent-contrast);
+      border: 6px solid var(--accent-hover);
+      box-shadow: 0 10px 0 var(--accent-hover), 0 14px 28px var(--shadow-color);
+      font-size: 4.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 12px auto 16px auto;
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    .big-speaker-btn:active {
+      transform: translateY(6px);
+      box-shadow: 0 4px 0 var(--accent-hover);
+    }
+
+    /* =========================================================================
+       SUPER MARIO ADVENTURE WORLD STYLES
+       ========================================================================= */
+    .mario-world-scene {
+      background: linear-gradient(180deg, #38bdf8 0%, #93c5fd 72%, #22c55e 72%, #16a34a 80%, #b45309 80%, #92400e 100%);
+      border: 4px solid #78350f;
+      border-radius: 26px;
+      height: 165px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px var(--shadow-color);
+    }
+
+    .mario-clouds {
+      position: absolute;
+      top: 12px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-around;
+      font-size: 2rem;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .mario-track-characters {
+      position: absolute;
+      bottom: 33px;
+      left: 16px;
+      right: 16px;
+      height: 60px;
+    }
+
+    .mario-shelly-hero {
+      position: absolute;
+      bottom: 0;
+      font-size: 2.8rem;
+      line-height: 1;
+      transition: left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.3s ease;
+      filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+      z-index: 4;
+    }
+
+    .mario-shelly-hero.jump-anim {
+      transform: translateY(-38px) scale(1.15);
+    }
+
+    .mario-pipe {
+      position: absolute;
+      bottom: 0;
+      width: 30px;
+      height: 36px;
+      background: linear-gradient(90deg, #16a34a, #4ade80, #15803d);
+      border: 3px solid #14532d;
+      border-radius: 4px;
+    }
+
+    .mario-pipe::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: -5px;
+      right: -5px;
+      height: 10px;
+      background: linear-gradient(90deg, #16a34a, #4ade80, #15803d);
+      border: 3px solid #14532d;
+      border-radius: 4px;
+    }
+
+    .mario-castle {
+      position: absolute;
+      right: 2px;
+      bottom: 0;
+      font-size: 3rem;
+      line-height: 1;
+    }
+
+    .mario-q-block {
+      min-height: 100px;
+      font-size: 2.3rem;
+      font-weight: 900;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fde047 0%, #eab308 100%);
+      border: 4px solid #a16207;
+      color: #713f12;
+      box-shadow: 0 8px 0 #854d0e, 0 10px 20px rgba(0,0,0,0.2);
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: transform 0.12s ease;
+    }
+
+    .mario-q-block:active:not(:disabled) {
+      transform: translateY(5px);
+      box-shadow: 0 3px 0 #854d0e;
+    }
+
+    /* =========================================================================
+       TURBO CAR RACE STYLES
+       ========================================================================= */
+    .race-hud {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .race-stat-box {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 18px;
+      padding: 8px 10px;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .race-stat-val {
+      font-size: 1.25rem;
+      display: block;
+      color: var(--accent);
+    }
+
+    .race-stat-lbl {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .race-track-scene {
+      background: #334155;
+      border: 4px solid #94a3b8;
+      border-radius: 26px;
+      height: 145px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.45), 0 8px 18px var(--shadow-color);
+    }
+
+    .race-grass-top, .race-grass-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 18px;
+      background: repeating-linear-gradient(90deg, #ef4444 0 24px, #ffffff 24px 48px);
+    }
+
+    .race-grass-top { top: 0; }
+    .race-grass-bottom { bottom: 0; }
+
+    @keyframes moveRoadStripes {
+      from { background-position: 0 0; }
+      to { background-position: -120px 0; }
+    }
+
+    .race-lane-divider {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 6px;
+      transform: translateY(-50%);
+      background: repeating-linear-gradient(90deg, #fde047 0 36px, transparent 36px 72px);
+      animation: moveRoadStripes 0.6s linear infinite;
+    }
+
+    .race-car-sprite {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 3.1rem;
+      line-height: 1;
+      transition: left 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+    }
+
+    .nitro-flame {
+      font-size: 1.8rem;
+      margin-right: -8px;
+      animation: bounceArrowLeft 0.25s infinite;
+    }
+
+    .race-finish-flag {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2.5rem;
+    }
+
+    /* Fixed Bottom Feedback Bar */
+    .feedback-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 18px 20px calc(18px + var(--safe-bottom));
+      z-index: 100;
+      transform: translateY(110%);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      border-top: 4px solid transparent;
+      box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    .feedback-bar.visible {
+      transform: translateY(0%);
+    }
+
+    .feedback-bar.correct {
+      background: var(--green-bg);
+      color: var(--green-text);
+      border-top-color: var(--green-main);
+    }
+
+    .feedback-bar.wrong {
+      background: var(--red-bg);
+      color: var(--red-text);
+      border-top-color: var(--red-main);
+    }
+
+    .feedback-inner {
+      max-width: 540px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .feedback-text-wrap {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .feedback-heading {
+      font-size: 1.35rem;
+      font-weight: 900;
+      margin: 0 0 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feedback-meaning {
+      font-size: 1.45rem;
+      font-weight: 900;
+      margin: 0;
+    }
+
+    /* Finish Screen */
+    .finish-card {
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      border-radius: 30px;
+      padding: 26px 20px;
+      text-align: center;
+      box-shadow: 0 10px 28px var(--shadow-color);
+      animation: popIn 0.35s ease;
+    }
+
+    .finish-stars {
+      font-size: 3.6rem;
+      margin: 10px 0 16px 0;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 18px 0 24px 0;
+    }
+
+    .reward-box {
+      background: var(--surface-subtle);
+      border: 2px solid var(--card-border);
+      border-radius: 20px;
+      padding: 12px 8px;
+    }
+
+    .reward-val {
+      font-size: 1.5rem;
+      font-weight: 900;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .reward-lbl {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app-container"></div>
+  <div id="feedback-bar" class="feedback-bar" aria-live="polite"></div>
+
+  <script>
+    // =========================================================================
+    // 1. WORD DATA (28 Words: 15 "a", 13 "an" with Arabic meanings & SVG table)
+    // =========================================================================
+    const TABLE_SVG = `<svg viewBox="0 0 80 80" width="76" height="76" aria-label="table">
+      <rect x="8" y="22" width="64" height="12" rx="5" fill="#d97706" stroke="#78350f" stroke-width="3"/>
+      <rect x="12" y="34" width="56" height="5" fill="#b45309"/>
+      <rect x="15" y="39" width="8" height="30" rx="3" fill="#92400e" stroke="#78350f" stroke-width="2.5"/>
+      <rect x="57" y="39" width="8" height="30" rx="3" fill="#92400e" stroke="#78350f" stroke-width="2.5"/>
+      <rect x="26" y="39" width="5" height="22" rx="2" fill="#78350f"/>
+      <rect x="49" y="39" width="5" height="22" rx="2" fill="#78350f"/>
+    </svg>`;
+
+    const WORDS = [
+      // A (15)
+      { word: "table", article: "a", ar: "طاولة", isSvg: true, pic: TABLE_SVG },
+      { word: "car", article: "a", ar: "سيارة", pic: "🚗" },
+      { word: "bulb", article: "a", ar: "لمبة", pic: "💡" },
+      { word: "hen", article: "a", ar: "دجاجة", pic: "🐔" },
+      { word: "nose", article: "a", ar: "أنف", pic: "👃" },
+      { word: "pot", article: "a", ar: "قدر", pic: "🍲" },
+      { word: "bed", article: "a", ar: "سرير", pic: "🛏️" },
+      { word: "van", article: "a", ar: "فان", pic: "🚐" },
+      { word: "girl", article: "a", ar: "بنت", pic: "👧" },
+      { word: "boy", article: "a", ar: "ولد", pic: "👦" },
+      { word: "baby", article: "a", ar: "طفل رضيع", pic: "👶" },
+      { word: "dog", article: "a", ar: "كلب", pic: "🐶" },
+      { word: "book", article: "a", ar: "كتاب", pic: "📖" },
+      { word: "ladybug", article: "a", ar: "دعسوقة", pic: "🐞" },
+      { word: "candy", article: "a", ar: "حلوى", pic: "🍬" },
+
+      // AN (13)
+      { word: "ant", article: "an", ar: "نملة", pic: "🐜" },
+      { word: "ox", article: "an", ar: "ثور", pic: "🐂" },
+      { word: "elf", article: "an", ar: "قزم", pic: "🧝" },
+      { word: "onion", article: "an", ar: "بصلة", pic: "🧅" },
+      { word: "owl", article: "an", ar: "بومة", pic: "🦉" },
+      { word: "ear", article: "an", ar: "أذن", pic: "👂" },
+      { word: "airplane", article: "an", ar: "طيارة", pic: "✈️" },
+      { word: "octopus", article: "an", ar: "أخطبوط", pic: "🐙" },
+      { word: "arm", article: "an", ar: "ذراع", pic: "💪" },
+      { word: "ice cream", article: "an", ar: "آيس كريم", pic: "🍦" },
+      { word: "otter", article: "an", ar: "سمور", pic: "🦦" },
+      { word: "egg", article: "an", ar: "بيضة", pic: "🥚" },
+      { word: "alligator", article: "an", ar: "تمساح", pic: "🐊" }
+    ];
+
+    const ACTIVITIES = [
+      { id: "learn", title: "Learn the rule", sub: "See and hear how A and An work", icon: "📚" },
+      { id: "mario", title: "Super Shelly World", sub: "Jump & hit blocks like Super Mario to reach the castle!", icon: "🍄", isArcade: true },
+      { id: "race", title: "Turbo Car Race", sub: "Pass the right gates to boost speed, energy & points!", icon: "🏎️", isArcade: true },
+      { id: "put", title: "Put a or an", sub: "Fill in the blank ___ before the word", icon: "✍️" },
+      { id: "circle", title: "Circle a or an", sub: "Tap to draw a red circle around a or an", icon: "⭕" },
+      { id: "basket", title: "Basket Sort", sub: "Put the word into the a or an basket", icon: "🧺" },
+      { id: "detective", title: "Vowel Detective", sub: "Does it start with a vowel sound?", icon: "🔎" },
+      { id: "listen", title: "Listen & Choose", sub: "Listen carefully and pick a or an", icon: "🔊" },
+      { id: "monster", title: "Word Monster", sub: "10 fun mixed questions!", icon: "👾" }
+    ];
+
+    // =========================================================================
+    // 2. STATE & SAFE LOCALSTORAGE PERSISTENCE
+    // =========================================================================
+    const STORAGE_KEY = "shelly_a_or_an_progress_v2";
+
+    const defaultProfile = {
+      name: "",
+      gender: "boy", // "boy" | "girl"
+      theme: (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light",
+      xp: 0,
+      coins: 0,
+      stars: {
+        learn: 0,
+        mario: 0,
+        race: 0,
+        put: 0,
+        circle: 0,
+        basket: 0,
+        detective: 0,
+        listen: 0,
+        monster: 0
+      },
+      onboarded: false
+    };
+
+    let state = loadState();
+    let currentScreen = state.onboarded ? "home" : "start";
+    let lesson = null;
+    let autoAdvanceTimer = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("shelly_a_or_an_progress_v1");
+        if (!raw) return JSON.parse(JSON.stringify(defaultProfile));
+        const parsed = JSON.parse(raw);
+        return {
+          ...defaultProfile,
+          ...parsed,
+          stars: { ...defaultProfile.stars, ...(parsed.stars || {}) }
+        };
+      } catch (e) {
+        return JSON.parse(JSON.stringify(defaultProfile));
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function applyThemeAttributes() {
+      document.documentElement.setAttribute("data-gender", state.gender || "boy");
+      document.documentElement.setAttribute("data-theme", state.theme || "light");
+    }
+
+    // =========================================================================
+    // 3. GENDER-AWARE SPEECH SYNTHESIS (Female Voice for Girl, Male Voice for Boy)
+    // =========================================================================
+    let cachedVoices = [];
+
+    function refreshVoices() {
+      try {
+        if ("speechSynthesis" in window) {
+          cachedVoices = window.speechSynthesis.getVoices() || [];
+        }
+      } catch (e) {}
+    }
+
+    if ("speechSynthesis" in window) {
+      refreshVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = refreshVoices;
+      }
+    }
+
+    function pickVoiceForGender(gender) {
+      if (!cachedVoices || cachedVoices.length === 0) {
+        refreshVoices();
+      }
+      const enVoices = cachedVoices.filter(v => /^en(-|_|$)/i.test(v.lang));
+      const pool = enVoices.length > 0 ? enVoices : cachedVoices;
+      if (pool.length === 0) return null;
+
+      const femaleKeywords = [
+        "female", "woman", "girl", "zira", "samantha", "victoria", "karen",
+        "moira", "tessa", "aria", "jenny", "michelle", "sonia", "libby",
+        "natasha", "clara", "susan", "hazel", "linda", "catherine", "ava",
+        "allison", "Nicky", "Google US English"
+      ];
+      const maleKeywords = [
+        "male", "man", "boy", "david", "mark", "guy", "christopher", "eric",
+        "brian", "daniel", "alex", "fred", "aaron", "rishi", "james",
+        "george", "richard", "roger", "steffan", "tom", "oliver",
+        "Google UK English Male"
+      ];
+
+      const targets = gender === "girl" ? femaleKeywords : maleKeywords;
+
+      // Prefer US English matching gender
+      const usPool = pool.filter(v => /en[-_]US/i.test(v.lang));
+      for (const kw of targets) {
+        const matchUs = usPool.find(v => v.name.toLowerCase().includes(kw.toLowerCase()));
+        if (matchUs) return matchUs;
+      }
+      for (const kw of targets) {
+        const matchAny = pool.find(v => v.name.toLowerCase().includes(kw.toLowerCase()));
+        if (matchAny) return matchAny;
+      }
+
+      // If no keyword matched and multiple English voices exist, pick avoiding opposite gender
+      const opposite = gender === "girl" ? maleKeywords : femaleKeywords;
+      const nonOpposite = pool.find(v => !opposite.some(kw => v.name.toLowerCase().includes(kw.toLowerCase())));
+      return nonOpposite || pool[0];
+    }
+
+    function isLatinName(name) {
+      if (!name || !name.trim()) return false;
+      return /^[A-Za-z\s'-]+$/.test(name.trim());
+    }
+
+    function speakText(text) {
+      try {
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "en-US";
+        utter.rate = 0.8;
+
+        const chosenVoice = pickVoiceForGender(state.gender);
+        if (chosenVoice) {
+          utter.voice = chosenVoice;
+        }
+        // Distinct pitch tuning for Girl (warm female) vs Boy (clear male/boy)
+        utter.pitch = state.gender === "girl" ? 1.22 : 0.86;
+
+        window.speechSynthesis.speak(utter);
+      } catch (e) {}
+    }
+
+    let audioCtx = null;
+    function playTone(type) {
+      try {
+        const Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        const now = audioCtx.currentTime;
+
+        if (type === "correct") {
+          const notes = [523.25, 659.25, 783.99, 1046.5];
+          notes.forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(freq, now + i * 0.07);
+            gain.gain.setValueAtTime(0.12, now + i * 0.07);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.22);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.07);
+            osc.stop(now + i * 0.07 + 0.24);
+          });
+        } else if (type === "wrong") {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.linearRampToValueAtTime(150, now + 0.25);
+          gain.gain.setValueAtTime(0.14, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.28);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        }
+      } catch (e) {}
+    }
+
+    // =========================================================================
+    // 4. HELPERS
+    // =========================================================================
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function renderPicture(item, sizePx = 76) {
+      if (item.isSvg) {
+        return `<span style="display:inline-flex;align-items:center;justify-content:center;width:${sizePx}px;height:${sizePx}px;">${item.pic}</span>`;
+      }
+      return `<span>${item.pic}</span>`;
+    }
+
+    function renderStarsBadge(count) {
+      let html = `<div class="stars-badge" aria-label="${count} out of 3 stars">`;
+      for (let i = 1; i <= 3; i++) {
+        html += `<span class="${i <= count ? "" : "star-off"}">⭐</span>`;
+      }
+      html += `</div>`;
+      return html;
+    }
+
+    function clearFeedbackBar() {
+      if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
+      const bar = document.getElementById("feedback-bar");
+      if (bar) {
+        bar.className = "feedback-bar";
+        bar.innerHTML = "";
+      }
+    }
+
+    function getRecommendedNextActivityId() {
+      for (const act of ACTIVITIES) {
+        if ((state.stars[act.id] || 0) === 0) return act.id;
+      }
+      return "mario";
+    }
+
+    // =========================================================================
+    // 5. SCREEN RENDERERS
+    // =========================================================================
+    function render() {
+      applyThemeAttributes();
+      clearFeedbackBar();
+      const app = document.getElementById("app");
+      if (currentScreen === "start") {
+        renderStartScreen(app);
+      } else if (currentScreen === "home") {
+        renderHomeScreen(app);
+      } else if (currentScreen === "learn") {
+        renderLearnScreen(app);
+      } else if (currentScreen === "lesson") {
+        renderLessonScreen(app);
+      } else if (currentScreen === "finish") {
+        renderFinishScreen(app);
+      }
+    }
+
+    // --- START / PROFILE SCREEN ---
+    function renderStartScreen(app) {
+      const displayName = escapeHtml(state.name);
+      app.innerHTML = `
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+          <button class="icon-btn" id="theme-toggle-start" type="button">
+            ${state.theme === "dark" ? "☀️ Light" : "🌙 Dark"}
+          </button>
+        </div>
+        <div class="start-card">
+          <div class="start-shelly" role="img" aria-label="Shelly the Turtle">🐢</div>
+          <h1 class="start-title">Shelly's A or An</h1>
+          <p style="margin:0;color:var(--text-muted);font-weight:800;">Let's play and learn English with Shelly!</p>
+
+          <p class="name-prompt">What's your name?</p>
+          <p class="arabic-hint">اكتب اسمك</p>
+
+          <input
+            id="child-name-input"
+            class="name-input"
+            type="text"
+            maxlength="24"
+            placeholder="Your name..."
+            value="${displayName}"
+            autocomplete="off"
+          />
+
+          <div class="guide-arrow-banner">👇 Tap Boy or Girl (Voice &amp; Color)</div>
+          <div class="gender-row">
+            <button type="button" class="gender-btn ${state.gender === "boy" ? "selected" : ""}" id="pick-boy">
+              <span class="emoji">👦</span>
+              <span>Boy</span>
+              <span class="voice-tag">🔊 Male Voice</span>
+            </button>
+            <button type="button" class="gender-btn ${state.gender === "girl" ? "selected" : ""}" id="pick-girl">
+              <span class="emoji">👧</span>
+              <span>Girl</span>
+              <span class="voice-tag">🔊 Female Voice</span>
+            </button>
+          </div>
+
+          <div class="guide-arrow-banner">👇 Tap Here to Start!</div>
+          <button type="button" class="btn-3d accent" id="start-play-btn" style="width:100%;font-size:1.45rem;padding:16px;">
+            <span>Let's Play! 🐢</span>
+            <span class="guide-arrow-inline">👉</span>
+          </button>
+        </div>
+      `;
+
+      const inputEl = document.getElementById("child-name-input");
+
+      document.getElementById("theme-toggle-start").addEventListener("click", () => {
+        state.name = inputEl.value;
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        saveState();
+        render();
+      });
+
+      document.getElementById("pick-boy").addEventListener("click", () => {
+        state.name = inputEl.value;
+        state.gender = "boy";
+        saveState();
+        render();
+        speakText("Boy!");
+      });
+
+      document.getElementById("pick-girl").addEventListener("click", () => {
+        state.name = inputEl.value;
+        state.gender = "girl";
+        saveState();
+        render();
+        speakText("Girl!");
+      });
+
+      document.getElementById("start-play-btn").addEventListener("click", () => {
+        const rawName = inputEl.value.trim();
+        state.name = rawName || "Friend";
+        state.onboarded = true;
+        saveState();
+        if (isLatinName(state.name)) {
+          speakText("Hello " + state.name + "!");
+        } else {
+          speakText("Hello!");
+        }
+        currentScreen = "home";
+        render();
+      });
+    }
+
+    // --- HOME SCREEN ---
+    function renderHomeScreen(app) {
+      const level = Math.floor(state.xp / 100) + 1;
+      const xpInLevel = state.xp % 100;
+      const childName = escapeHtml(state.name || "Friend");
+      const genderEmoji = state.gender === "girl" ? "👧" : "👦";
+      const voiceLabel = state.gender === "girl" ? "👩 Female Voice" : "👨 Male Voice";
+      const recommendedId = getRecommendedNextActivityId();
+
+      app.innerHTML = `
+        <header class="home-header">
+          <div class="header-top-row">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span class="stat-pill">🏆 Level ${level}</span>
+              <span class="stat-pill">🪙 ${state.coins}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button type="button" class="icon-btn" id="edit-profile-btn" title="Change name, gender voice, or color">
+                ${genderEmoji} ${childName} (${voiceLabel}) ✏️
+              </button>
+              <button type="button" class="icon-btn" id="theme-toggle-home" title="Light / Dark mode">
+                ${state.theme === "dark" ? "☀️" : "🌙"}
+              </button>
+            </div>
+          </div>
+          <div class="xp-bar-wrap">
+            <div class="xp-track" aria-label="XP progress">
+              <div class="xp-fill" style="width: ${xpInLevel}%;"></div>
+            </div>
+            <span class="xp-label">${xpInLevel} / 100 XP</span>
+          </div>
+        </header>
+
+        <section class="shelly-banner" id="shelly-greet-banner">
+          <div class="shelly-avatar" title="Tap Shelly to hear a greeting!">🐢</div>
+          <div class="shelly-speech">
+            <h2>Hi, ${childName}! 👋</h2>
+            <p>Follow the yellow arrow <strong style="color:#ca8a04;">👉 Tap Here</strong> to play your next stage!</p>
+          </div>
+        </section>
+
+        <main class="games-grid">
+          ${ACTIVITIES.map((act, index) => {
+            const isNext = act.id === recommendedId;
+            return `
+              <button
+                type="button"
+                class="game-card-btn ${isNext ? "recommended-next" : ""} ${act.isArcade ? "arcade-special" : ""}"
+                data-activity="${act.id}"
+              >
+                <div class="game-card-left">
+                  <div class="game-icon-badge">${act.icon}</div>
+                  <div>
+                    <h3 class="game-title">
+                      <span>${index + 1}. ${act.title}</span>
+                      ${isNext ? `<span class="next-arrow-pill">👉 Tap Here!</span>` : ""}
+                    </h3>
+                    <p class="game-subtitle">${act.sub}</p>
+                  </div>
+                </div>
+                ${renderStarsBadge(state.stars[act.id] || 0)}
+              </button>
+            `;
+          }).join("")}
+        </main>
+      `;
+
+      document.getElementById("edit-profile-btn").addEventListener("click", () => {
+        currentScreen = "start";
+        render();
+      });
+
+      document.getElementById("theme-toggle-home").addEventListener("click", () => {
+        state.theme = state.theme === "dark" ? "light" : "dark";
+        saveState();
+        render();
+      });
+
+      document.getElementById("shelly-greet-banner").addEventListener("click", () => {
+        if (isLatinName(state.name)) {
+          speakText(`Hi ${state.name}! Let's practice a or an!`);
+        } else {
+          speakText("Hi! Let's practice a or an!");
+        }
+      });
+
+      app.querySelectorAll(".game-card-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const actId = btn.getAttribute("data-activity");
+          if (actId === "learn") {
+            if ((state.stars.learn || 0) < 3) {
+              state.stars.learn = 3;
+              saveState();
+            }
+            currentScreen = "learn";
+            render();
+          } else {
+            startLesson(actId);
+          }
+        });
+      });
+    }
+
+    // --- LEARN THE RULE SCREEN ---
+    function renderLearnScreen(app) {
+      const aExamples = [
+        WORDS.find(w => w.word === "table"),
+        WORDS.find(w => w.word === "car"),
+        WORDS.find(w => w.word === "dog"),
+        WORDS.find(w => w.word === "book")
+      ];
+      const anExamples = [
+        WORDS.find(w => w.word === "ant"),
+        WORDS.find(w => w.word === "egg"),
+        WORDS.find(w => w.word === "ice cream"),
+        WORDS.find(w => w.word === "owl")
+      ];
+
+      app.innerHTML = `
+        <div class="lesson-topbar">
+          <button type="button" class="close-btn" id="learn-back-btn" aria-label="Back to home">✕</button>
+          <h2 style="margin:0;font-size:1.45rem;font-weight:900;">📚 Learn the Rule</h2>
+        </div>
+
+        <div class="vowels-strip">
+          <p class="vowels-title">👇 Tap any vowel to hear it!</p>
+          <div class="vowels-letters">
+            ${["a", "e", "i", "o", "u"].map(v => `
+              <button type="button" class="vowel-pill" data-vowel="${v}">${v}</button>
+            `).join("")}
+          </div>
+        </div>
+
+        <section class="rule-card yellow">
+          <div class="rule-badge">A</div>
+          <p class="rule-sentence">"A" comes before a singular noun that begins with a consonant sound.</p>
+          <div class="examples-grid">
+            ${aExamples.map(item => `
+              <button type="button" class="example-chip" data-phrase="a ${item.word}">
+                <div class="example-pic">${renderPicture(item, 40)}</div>
+                <div>
+                  <span class="example-text-en">a ${item.word} 🔊</span>
+                  <span class="example-text-ar">${item.ar}</span>
+                </div>
+              </button>
+            `).join("")}
+          </div>
+        </section>
+
+        <section class="rule-card orange">
+          <div class="rule-badge">An</div>
+          <p class="rule-sentence">"An" comes before a singular noun that begins with a vowel sound.</p>
+          <div class="examples-grid">
+            ${anExamples.map(item => `
+              <button type="button" class="example-chip" data-phrase="an ${item.word}">
+                <div class="example-pic">${renderPicture(item, 40)}</div>
+                <div>
+                  <span class="example-text-en">an ${item.word} 🔊</span>
+                  <span class="example-text-ar">${item.ar}</span>
+                </div>
+              </button>
+            `).join("")}
+          </div>
+        </section>
+
+        <div class="guide-arrow-banner">👇 Tap Here to Continue!</div>
+        <button type="button" class="btn-3d accent" id="learn-done-btn" style="width:100%;font-size:1.35rem;">
+          <span>I'm Ready! 🐢⭐</span>
+          <span class="guide-arrow-inline">👉</span>
+        </button>
+      `;
+
+      document.getElementById("learn-back-btn").addEventListener("click", () => {
+        currentScreen = "home";
+        render();
+      });
+
+      document.getElementById("learn-done-btn").addEventListener("click", () => {
+        state.stars.learn = 3;
+        saveState();
+        currentScreen = "home";
+        render();
+      });
+
+      app.querySelectorAll(".vowel-pill").forEach(btn => {
+        btn.addEventListener("click", () => {
+          speakText(btn.getAttribute("data-vowel"));
+        });
+      });
+
+      app.querySelectorAll(".example-chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+          speakText(btn.getAttribute("data-phrase"));
+        });
+      });
+    }
+
+    // =========================================================================
+    // 6. LESSON ENGINE (ALL ORIGINAL GAMES + MARIO ADVENTURE + TURBO CAR RACE)
+    // =========================================================================
+    const SUB_MODES = ["put", "circle", "basket", "detective", "listen"];
+
+    function startLesson(modeId) {
+      const aPool = shuffle(WORDS.filter(w => w.article === "a")).slice(0, 5);
+      const anPool = shuffle(WORDS.filter(w => w.article === "an")).slice(0, 5);
+      const picked = shuffle([...aPool, ...anPool]);
+
+      const queue = picked.map((wordObj, idx) => {
+        const effectiveType = modeId === "monster"
+          ? SUB_MODES[idx % SUB_MODES.length]
+          : modeId;
+        return {
+          wordObj,
+          type: effectiveType,
+          circleOrder: Math.random() < 0.5 ? ["a", "an"] : ["an", "a"]
+        };
+      });
+
+      lesson = {
+        modeId,
+        queue,
+        totalInitial: 10,
+        completedCount: 0,
+        mistakes: 0,
+        answered: false,
+        // Extra gamification stats for Mario & Car Race
+        raceSpeed: 60,     // starts at 60 km/h, increases +25 km/h per right answer
+        raceEnergy: 20,    // starts at 20%, increases +10% per right answer
+        racePoints: 0,     // +100 pts per right answer
+        marioCoins: 0
+      };
+
+      currentScreen = "lesson";
+      render();
+    }
+
+    function renderStageMapBar() {
+      const currentStep = Math.min(lesson.totalInitial, lesson.completedCount + 1);
+      let nodesHtml = "";
+      for (let i = 1; i <= lesson.totalInitial; i++) {
+        let cls = "stage-node";
+        let label = i;
+        if (i < currentStep) {
+          cls += " done";
+          label = "✓";
+        } else if (i === currentStep) {
+          cls += " current";
+        }
+        nodesHtml += `<div class="${cls}" title="Stage ${i}">${label}</div>`;
+      }
+      return `<div class="stage-map-bar" aria-label="Stage map">${nodesHtml}</div>`;
+    }
+
+    function renderLessonScreen(app) {
+      if (!lesson || lesson.queue.length === 0) {
+        finishLesson();
+        return;
+      }
+
+      const currentQ = lesson.queue[0];
+      const { wordObj, type, circleOrder } = currentQ;
+      const progressPct = Math.min(100, Math.round((lesson.completedCount / lesson.totalInitial) * 100));
+
+      // Speak the word when the question appears
+      setTimeout(() => {
+        if (currentScreen === "lesson" && lesson && !lesson.answered) {
+          speakText(wordObj.word);
+        }
+      }, 120);
+
+      let stageHtml = "";
+
+      // --- MODE A: SUPER MARIO ADVENTURE ("mario") ---
+      if (type === "mario") {
+        const heroLeftPct = Math.min(82, 4 + Math.round((lesson.completedCount / lesson.totalInitial) * 78));
+        stageHtml = `
+          <div class="mario-world-scene">
+            <div class="mario-clouds">
+              <span>☁️</span>
+              <span>🪙 × ${lesson.marioCoins}</span>
+              <span>☁️</span>
+            </div>
+            <div class="mario-track-characters">
+              <div class="mario-pipe" style="left: 28%;"></div>
+              <div class="mario-pipe" style="left: 58%; height: 44px;"></div>
+              <div id="mario-hero" class="mario-shelly-hero" style="left: ${heroLeftPct}%;">🐢🍄</div>
+              <div class="mario-castle">🏰</div>
+            </div>
+          </div>
+
+          <div class="question-stage">
+            <p class="mode-instruction">🍄 Hit the right block to jump forward!</p>
+            <div class="pic-display" id="speak-word-btn" title="Tap to hear the word">
+              ${renderPicture(wordObj, 82)}
+              <span class="speaker-mini">🔊</span>
+            </div>
+            <div class="word-line">
+              <span id="put-blank-slot" class="blank-slot">?</span>
+              <span>${escapeHtml(wordObj.word)}</span>
+            </div>
+          </div>
+
+          <div class="guide-arrow-banner">👇 Tap the right [ ? ] Block!</div>
+          <div class="choices-row">
+            <button type="button" class="mario-q-block" data-answer="a">
+              <span class="guide-finger-top">👇</span>
+              <span>[ a ]</span>
+              <span style="font-size:0.85rem;font-weight:800;">Block A</span>
+            </button>
+            <button type="button" class="mario-q-block" data-answer="an">
+              <span class="guide-finger-top">👇</span>
+              <span>[ an ]</span>
+              <span style="font-size:0.85rem;font-weight:800;">Block AN</span>
+            </button>
+          </div>
+        `;
+      }
+      // --- MODE B: TURBO CAR RACE ("race") ---
+      else if (type === "race") {
+        const carLeftPct = Math.min(80, 4 + Math.round((lesson.completedCount / lesson.totalInitial) * 76));
+        const animDur = Math.max(0.16, (0.7 - (lesson.raceSpeed - 60) * 0.002)).toFixed(2);
+        stageHtml = `
+          <div class="race-hud">
+            <div class="race-stat-box">
+              <span class="race-stat-val">🏆 ${lesson.racePoints}</span>
+              <span class="race-stat-lbl">Points</span>
+            </div>
+            <div class="race-stat-box">
+              <span class="race-stat-val">⚡ ${lesson.raceEnergy}%</span>
+              <span class="race-stat-lbl">Energy</span>
+            </div>
+            <div class="race-stat-box">
+              <span class="race-stat-val">🚀 ${lesson.raceSpeed} km/h</span>
+              <span class="race-stat-lbl">Speed</span>
+            </div>
+          </div>
+
+          <div class="race-track-scene">
+            <div class="race-grass-top"></div>
+            <div class="race-lane-divider" style="animation-duration: ${animDur}s;"></div>
+            <div id="race-car-el" class="race-car-sprite" style="left: ${carLeftPct}%;">
+              ${lesson.raceSpeed > 80 ? `<span class="nitro-flame">🔥</span>` : ""}
+              <span>🏎️🐢</span>
+            </div>
+            <div class="race-finish-flag">🏁</div>
+            <div class="race-grass-bottom"></div>
+          </div>
+
+          <div class="question-stage">
+            <p class="mode-instruction">🏎️ Choose the right gate for Turbo Boost!</p>
+            <div class="pic-display" id="speak-word-btn" title="Tap to hear the word">
+              ${renderPicture(wordObj, 82)}
+              <span class="speaker-mini">🔊</span>
+            </div>
+            <div class="word-line">
+              <span id="put-blank-slot" class="blank-slot">___</span>
+              <span>${escapeHtml(wordObj.word)}</span>
+            </div>
+          </div>
+
+          <div class="guide-arrow-banner">👇 Tap a Gate to Boost Speed!</div>
+          <div class="choices-row">
+            <button type="button" class="choice-btn" data-answer="a">
+              <span class="guide-finger-top">👇</span>
+              <span>🛣️ a</span>
+            </button>
+            <button type="button" class="choice-btn" data-answer="an">
+              <span class="guide-finger-top">👇</span>
+              <span>🛣️ an</span>
+            </button>
+          </div>
+        `;
+      }
+      // --- ORIGINAL GAME 1: PUT A OR AN ---
+      else if (type === "put") {
+        stageHtml = `
+          <div class="question-stage">
+            <p class="mode-instruction">✍️ Put <strong>a</strong> or <strong>an</strong></p>
+            <div class="pic-display" id="speak-word-btn" title="Tap to hear the word">
+              ${renderPicture(wordObj, 86)}
+              <span class="speaker-mini">🔊</span>
+            </div>
+            <div class="word-line">
+              <span id="put-blank-slot" class="blank-slot">___</span>
+              <span>${escapeHtml(wordObj.word)}</span>
+            </div>
+          </div>
+          <div class="guide-arrow-banner">👇 Tap <strong>a</strong> or <strong>an</strong> below!</div>
+          <div class="choices-row">
+            <button type="button" class="choice-btn" data-answer="a">
+              <span class="guide-finger-top">👇</span>
+              <span>a</span>
+            </button>
+            <button type="button" class="choice-btn" data-answer="an">
+              <span class="guide-finger-top">👇</span>
+              <span>an</span>
+            </button>
+          </div>
+        `;
+      }
+      // --- ORIGINAL GAME 2: CIRCLE A OR AN ---
+      else if (type === "circle") {
+        stageHtml = `
+          <div class="question-stage">
+            <p class="mode-instruction">⭕ Circle <strong>a</strong> or <strong>an</strong></p>
+            <div class="pic-display" id="speak-word-btn" title="Tap to hear the word">
+              ${renderPicture(wordObj, 86)}
+              <span class="speaker-mini">🔊</span>
+            </div>
+            <div class="word-line">${escapeHtml(wordObj.word)}</div>
+          </div>
+          <div class="guide-arrow-banner">👇 Tap a box to draw a circle!</div>
+          <div class="choices-row">
+            ${circleOrder.map(opt => `
+              <button type="button" class="worksheet-circle-box" data-answer="${opt}">
+                <span class="guide-finger-top">👇</span>
+                <span>${opt}</span>
+                <svg class="red-circle-svg" viewBox="0 0 160 90" style="display:none;">
+                  <ellipse cx="80" cy="45" rx="70" ry="36" />
+                </svg>
+              </button>
+            `).join("")}
+          </div>
+        `;
+      }
+      // --- ORIGINAL GAME 3: BASKET SORT ---
+      else if (type === "basket") {
+        stageHtml = `
+          <div class="question-stage" id="basket-word-card">
+            <p class="mode-instruction">🧺 Tap the right basket!</p>
+            <div class="pic-display" id="speak-word-btn" title="Tap to hear the word">
+              ${renderPicture(wordObj, 86)}
+              <span class="speaker-mini">🔊</span>
+            </div>
+            <div class="word-line">${escapeHtml(wordObj.word)}</div>
+          </div>
+          <div class="guide-arrow-banner">👇 Tap the Blue (a) or Orange (an) Basket!</div>
+          <div class="baskets-row">
+            <button type="button" class="basket-btn basket-a" data-answer="a">
+              <span class="guide-finger-top">👇</span>
+              <div class="basket-rim"></div>
+              <span class="basket-label">a</span>
+              <span class="basket-sub">Consonant sound</span>
+            </button>
+            <button type="button" class="basket-btn basket-an" data-answer="an">
+              <span class="guide-finger-top">👇</span>
+              <div class="basket-rim"></div>
+              <span class="basket-label">an</span>
+              <span class="basket-sub">Vowel sound</span>
+            </button>
+          </div>
+        `;
+      }
+      // --- ORIGINAL GAME 4: VOWEL DETECTIVE ---
+      else if (type === "detective") {
+        const firstLetter = wordObj.word.charAt(0);
+        const restWord = wordObj.word.slice(1);
+        stageHtml = `
+          <div class="question-stage">
+            <p class="mode-instruction">🔎 Does it start with a vowel sound?</p>
+            <div class="pic-display" id="speak-word-btn" title="Tap to hear the word">
+              ${renderPicture(wordObj, 86)}
+              <span class="speaker-mini">🔊</span>
+            </div>
+            <div class="word-line">
+              <span class="first-letter-hi">${escapeHtml(firstLetter)}</span>${escapeHtml(restWord)}
+            </div>
+            <p style="margin:8px 0 0 0;font-weight:800;color:var(--text-muted);font-size:0.95rem;">
+              Vowels: <strong>a, e, i, o, u</strong>
+            </p>
+          </div>
+          <div class="guide-arrow-banner">👇 Tap Yes or No!</div>
+          <div class="choices-row">
+            <button type="button" class="choice-btn" data-answer="an">
+              <span class="guide-finger-top">👇</span>
+              <span>Yes 👍</span>
+              <span style="font-size:1rem;font-weight:800;color:var(--text-muted);">(Use "an")</span>
+            </button>
+            <button type="button" class="choice-btn" data-answer="a">
+              <span class="guide-finger-top">👇</span>
+              <span>No 👎</span>
+              <span style="font-size:1rem;font-weight:800;color:var(--text-muted);">(Use "a")</span>
+            </button>
+          </div>
+        `;
+      }
+      // --- ORIGINAL GAME 5: LISTEN & CHOOSE ---
+      else if (type === "listen") {
+        stageHtml = `
+          <div class="question-stage">
+            <p class="mode-instruction">🔊 Listen &amp; Choose</p>
+            <button type="button" class="big-speaker-btn" id="speak-word-btn" aria-label="Listen to word">
+              🔊
+            </button>
+            <p style="margin:0;color:var(--text-muted);font-weight:800;">Tap the speaker to hear again</p>
+          </div>
+          <div class="guide-arrow-banner">👇 Tap <strong>a</strong> or <strong>an</strong>!</div>
+          <div class="choices-row">
+            <button type="button" class="choice-btn" data-answer="a">
+              <span class="guide-finger-top">👇</span>
+              <span>a</span>
+            </button>
+            <button type="button" class="choice-btn" data-answer="an">
+              <span class="guide-finger-top">👇</span>
+              <span>an</span>
+            </button>
+          </div>
+        `;
+      }
+
+      app.innerHTML = `
+        <div class="lesson-topbar">
+          <button type="button" class="close-btn" id="lesson-exit-btn" aria-label="Exit lesson">✕</button>
+          <div class="progress-track" aria-label="Lesson progress">
+            <div class="progress-fill" style="width: ${progressPct}%;"></div>
+          </div>
+        </div>
+        ${renderStageMapBar()}
+        ${stageHtml}
+      `;
+
+      document.getElementById("lesson-exit-btn").addEventListener("click", () => {
+        clearFeedbackBar();
+        currentScreen = "home";
+        render();
+      });
+
+      const speakBtn = document.getElementById("speak-word-btn");
+      if (speakBtn) {
+        speakBtn.addEventListener("click", () => {
+          speakText(wordObj.word);
+        });
+      }
+
+      app.querySelectorAll("[data-answer]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (lesson.answered) return;
+          const chosen = btn.getAttribute("data-answer");
+          evaluateAnswer(chosen, btn, currentQ);
+        });
+      });
+    }
+
+    function evaluateAnswer(chosenArticle, clickedBtn, currentQ) {
+      lesson.answered = true;
+      const { wordObj, type } = currentQ;
+      const isCorrect = chosenArticle === wordObj.article;
+      const fullPhrase = `${wordObj.article} ${wordObj.word}`;
+
+      // Disable all answer buttons and hide guide fingers
+      document.querySelectorAll("[data-answer]").forEach(b => {
+        b.disabled = true;
+        const finger = b.querySelector(".guide-finger-top");
+        if (finger) finger.style.display = "none";
+      });
+
+      // Visual update per game mode
+      if (type === "put" || type === "mario" || type === "race") {
+        const slot = document.getElementById("put-blank-slot");
+        if (slot) {
+          slot.textContent = wordObj.article;
+          slot.classList.add(isCorrect ? "filled-correct" : "filled-wrong");
+        }
+      } else if (type === "circle") {
+        const svg = clickedBtn.querySelector(".red-circle-svg");
+        if (svg) svg.style.display = "block";
+      }
+
+      // Super Mario jump & coin reward
+      if (type === "mario" && isCorrect) {
+        lesson.marioCoins += 10;
+        const hero = document.getElementById("mario-hero");
+        if (hero) {
+          hero.classList.add("jump-anim");
+          const nextPct = Math.min(82, 4 + Math.round(((lesson.completedCount + 1) / lesson.totalInitial) * 78));
+          hero.style.left = nextPct + "%";
+        }
+      }
+
+      // Turbo Car Race speed, energy & points boost
+      if (type === "race") {
+        if (isCorrect) {
+          lesson.racePoints += 100;
+          lesson.raceEnergy = Math.min(100, lesson.raceEnergy + 10);
+          lesson.raceSpeed += 25;
+          const car = document.getElementById("race-car-el");
+          if (car) {
+            const nextPct = Math.min(80, 4 + Math.round(((lesson.completedCount + 1) / lesson.totalInitial) * 76));
+            car.style.left = nextPct + "%";
+          }
+        } else {
+          lesson.raceSpeed = Math.max(60, lesson.raceSpeed - 10);
+        }
+      }
+
+      if (isCorrect) {
+        clickedBtn.classList.add("state-correct");
+        playTone("correct");
+      } else {
+        clickedBtn.classList.add("state-wrong");
+        playTone("wrong");
+        document.querySelectorAll("[data-answer]").forEach(b => {
+          if (b.getAttribute("data-answer") === wordObj.article && b !== clickedBtn) {
+            b.classList.add("state-correct");
+          }
+        });
+      }
+
+      // Always speak "a/an + word" after answering
+      speakText(fullPhrase);
+
+      const bar = document.getElementById("feedback-bar");
+      const childName = escapeHtml(state.name || "Friend");
+
+      if (isCorrect) {
+        lesson.completedCount += 1;
+        lesson.queue.shift();
+
+        const praises = [
+          `Correct!`,
+          `Great job, ${childName}!`,
+          `Awesome, ${childName}!`,
+          `Super star!`,
+          `Way to go, ${childName}!`
+        ];
+        let extraBadge = "";
+        if (type === "mario") extraBadge = " 🍄 +10 Coins!";
+        if (type === "race") extraBadge = ` 🚀 Speed ${lesson.raceSpeed} km/h!`;
+
+        const praiseText = praises[Math.floor(Math.random() * praises.length)] + extraBadge;
+
+        bar.className = "feedback-bar correct visible";
+        bar.innerHTML = `
+          <div class="feedback-inner">
+            <div class="feedback-text-wrap">
+              <p class="feedback-heading">✅ ${praiseText}</p>
+              <p class="feedback-meaning">${escapeHtml(fullPhrase)} = <span dir="rtl">${escapeHtml(wordObj.ar)}</span></p>
+            </div>
+          </div>
+        `;
+
+        autoAdvanceTimer = setTimeout(() => {
+          if (currentScreen !== "lesson" || !lesson) return;
+          lesson.answered = false;
+          if (lesson.queue.length === 0) {
+            finishLesson();
+          } else {
+            render();
+          }
+        }, 1400);
+      } else {
+        lesson.mistakes += 1;
+        const missed = lesson.queue.shift();
+        lesson.queue.push({
+          ...missed,
+          circleOrder: Math.random() < 0.5 ? ["a", "an"] : ["an", "a"]
+        });
+
+        bar.className = "feedback-bar wrong visible";
+        bar.innerHTML = `
+          <div class="feedback-inner">
+            <div class="feedback-text-wrap">
+              <p class="feedback-heading">❌ Correct answer:</p>
+              <p class="feedback-meaning">${escapeHtml(fullPhrase)} = <span dir="rtl">${escapeHtml(wordObj.ar)}</span></p>
+            </div>
+            <button type="button" class="btn-3d red" id="continue-wrong-btn" style="min-width:170px;">
+              <span>👉 CONTINUE</span>
+            </button>
+          </div>
+        `;
+
+        document.getElementById("continue-wrong-btn").addEventListener("click", () => {
+          if (currentScreen !== "lesson" || !lesson) return;
+          lesson.answered = false;
+          render();
+        });
+      }
+    }
+
+    // --- FINISH SCREEN ---
+    function finishLesson() {
+      const mistakes = lesson ? lesson.mistakes : 0;
+      const modeId = lesson ? lesson.modeId : "put";
+
+      let starsEarned = 1;
+      if (mistakes <= 1) starsEarned = 3;
+      else if (mistakes <= 3) starsEarned = 2;
+
+      const xpEarned = 10 + 5 * starsEarned;
+      const coinsEarned = 5 * starsEarned;
+      const totalAttempts = 10 + mistakes;
+      const accuracy = Math.round((10 / totalAttempts) * 100);
+
+      state.xp += xpEarned;
+      state.coins += coinsEarned;
+      state.stars[modeId] = Math.max(state.stars[modeId] || 0, starsEarned);
+      saveState();
+
+      lesson.summary = { starsEarned, xpEarned, coinsEarned, accuracy };
+      currentScreen = "finish";
+      render();
+    }
+
+    function renderFinishScreen(app) {
+      const { starsEarned, xpEarned, coinsEarned, accuracy } = (lesson && lesson.summary) || {
+        starsEarned: 3,
+        xpEarned: 25,
+        coinsEarned: 15,
+        accuracy: 100
+      };
+      const childName = escapeHtml(state.name || "Friend");
+
+      setTimeout(() => {
+        if (isLatinName(state.name)) {
+          speakText(`Great job ${state.name}! You got ${starsEarned} stars!`);
+        } else {
+          speakText(`Great job! You got ${starsEarned} stars!`);
+        }
+      }, 150);
+
+      let starsRow = "";
+      for (let i = 1; i <= 3; i++) {
+        starsRow += `<span class="${i <= starsEarned ? "" : "star-off"}">⭐</span>`;
+      }
+
+      app.innerHTML = `
+        <div class="finish-card">
+          <div class="start-shelly">🐢🎉</div>
+          <h1 class="start-title">Awesome job, ${childName}!</h1>
+          <p style="margin:4px 0 0 0;color:var(--text-muted);font-weight:800;">Lesson Complete!</p>
+
+          <div class="finish-stars" aria-label="${starsEarned} stars">${starsRow}</div>
+
+          <div class="rewards-grid">
+            <div class="reward-box">
+              <span class="reward-val">+${xpEarned}</span>
+              <span class="reward-lbl">⚡ XP</span>
+            </div>
+            <div class="reward-box">
+              <span class="reward-val">${accuracy}%</span>
+              <span class="reward-lbl">🎯 Accuracy</span>
+            </div>
+            <div class="reward-box">
+              <span class="reward-val">+${coinsEarned}</span>
+              <span class="reward-lbl">🪙 Coins</span>
+            </div>
+          </div>
+
+          <div class="guide-arrow-banner">👇 Tap Here to Continue!</div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <button type="button" class="btn-3d accent" id="finish-home-btn" style="width:100%;">
+              <span>👉 Next Stage (Home) 🏠</span>
+            </button>
+            <button type="button" class="btn-3d" id="finish-again-btn" style="width:100%;">
+              Play Again 🔄
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("finish-again-btn").addEventListener("click", () => {
+        startLesson(lesson ? lesson.modeId : "put");
+      });
+
+      document.getElementById("finish-home-btn").addEventListener("click", () => {
+        currentScreen = "home";
+        render();
+      });
+    }
+
+    // Initialize app
+    render();
+  </script>
+</body>
+</html>
